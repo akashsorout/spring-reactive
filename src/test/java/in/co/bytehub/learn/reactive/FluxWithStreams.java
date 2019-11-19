@@ -76,22 +76,43 @@ public class FluxWithStreams {
     @Test
     public void parallelExecution() {
 
-        Flux<String> stringFlux = Flux.fromIterable(nameList)
-                .window(2) // It transform Whole flux in Flux of chunk of Flux i.e Flux<Flux<String>>
-                .map(x -> x.map(t -> externalServiceCall(t))
-                        .subscribeOn(Schedulers.parallel()))
-                .flatMap(z -> z)
-                .flatMap(z -> z)
-                .log();
+//        Flux<String> stringFlux = Flux.fromIterable(nameList)
+//                .window(2) // It transform Whole flux in Flux of chunk of Flux i.e Flux<Flux<String>>
+//                .map(x -> x.map(t -> externalServiceCall(t))
+//                        .subscribeOn(Schedulers.parallel()))
+//                .flatMap(z -> z)
+//                .flatMap(z -> z)
+//                .log();
 
 
         /* Little bit nicer way */
-//        Flux<String> stringFlux = Flux.fromIterable(nameList)
-//                .window(2)
-//                .flatMap(x -> x.flatMap(t -> externalServiceCall(t)).subscribeOn(Schedulers.parallel()))
-//                .log();
+        Flux<String> stringFlux = Flux.fromIterable(nameList)
+                .window(2)
+                .flatMap(x -> x.flatMap(t -> externalServiceCall(t)).subscribeOn(Schedulers.parallel()))
+                .log();
 
         StepVerifier.create(stringFlux)
+                .expectNextCount(8)
+                .verifyComplete();
+
+        // I this approach order is not preserved
+    }
+
+
+    @Test
+    public void parallelExecution_PreserveOrder() {
+
+        /*
+         * flatMapSequential is the key method to preserve the order in flux
+         * use flatMapSequential method instead of flatMap when order must be preserve
+         * */
+
+        Flux<String> stringFlux = Flux.fromIterable(nameList)
+                .window(1)
+                .flatMapSequential(x -> x.flatMap(t -> externalServiceCall(t))
+                        .subscribeOn(Schedulers.parallel()));
+
+        StepVerifier.create(stringFlux.log())
                 .expectNextCount(8)
                 .verifyComplete();
     }
