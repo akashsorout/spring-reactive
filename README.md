@@ -9,6 +9,12 @@ Just for learning reactive with spring boot
 
 Both the programming model run on same `reactive-core` foundation
 
+______________________________________________________________
+
+We are using cassandra as NoSql database here.
+
+`spring-data-cassandra` is used to interact with database.
+`spring-boot-starter-data-cassandra` dependency is used to achieve this.
 
 
 

@@ -1,5 +1,6 @@
 package in.co.bytehub.learn.reactive.endpoint;
 
+import in.co.bytehub.learn.reactive.controller.FluxController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 @RunWith(SpringRunner.class)
-@WebFluxTest
+@WebFluxTest(FluxController.class)
 public class FluxEndpointTest {
 
     @Autowired
