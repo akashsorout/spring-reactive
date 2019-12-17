@@ -52,7 +52,7 @@ public class ColdHotPublisher {
         ConnectableFlux<String> connectableFlux = stringFlux.publish();
         connectableFlux.connect();
 
-        // Al the subscribers connected with (subscribed) to connectableFlux will in HOT publishing mode
+        // All the subscribers connected with (subscribed) to connectableFlux will in HOT publishing mode
         // Means if any subscriber subscribes later it will not get data which is already emitted by connectableFlux
         // to other subscribers
 
